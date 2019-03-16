@@ -18,30 +18,60 @@ class Checker(SafeClass):
 
     _required_general_options = {"main_settings"}
 
-    _required_settings_shape = (12, 4)
+    # changed as we add 7th class
+    _required_settings_shape = (16, 4)
 
-    _required_settings_options = {"cl8_9",
-                                  "cl8_10", "cl8_11", "cl9_10",
-                                  "cl9_11", "cl10_11", "one_school",
-                                  "one_town", "com_in_one", "max_compart",
-                                  "debug_mode"}
+    _required_settings_options = {
+        "cl7_8",
+        "cl7_9",
+        "cl7_10",
+        "cl7_11",
+        # the above adds 7th class
+        "cl8_9",
+        "cl8_10",
+        "cl8_11",
+        "cl9_10",
+        "cl9_11",
+        "cl10_11",
+        "one_school",
+        "one_town",
+        "com_in_one",
+        "max_compart",
+        "debug_mode"}
 
-    kl_comb_names = {"cl8_9": (8, 9), "cl8_10": (8, 10),
-                     "cl8_11": (8, 11), "cl9_10": (9, 10),
-                     "cl9_11": (9, 11), "cl10_11": (10, 11)}
+    kl_comb_names = {
+        "cl7_8": (7, 8),
+        "cl7_9": (7, 9),
+        "cl7_10": (7, 10),
+        "cl7_11": (7, 11),
+        # the above adds 7th class
+        "cl8_9": (8, 9),
+        "cl8_10": (8, 10),
+        "cl8_11": (8, 11),
+        "cl9_10": (9, 10),
+        "cl9_11": (9, 11),
+        "cl10_11": (10, 11)
+    }
 
     _standard_settings_column_names = ["key", "description", "code", "result"]
 
-    _required_settings_values_condition = {"cl8_9": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "cl8_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "cl8_11": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "cl9_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "cl10_11": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "one_school": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "one_town": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "com_in_one": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
-                                           "max_com_part": Ch(lambda x: 0 <= x <= 1, "0 <= x <= 1"),
-                                           "debug_mode": Ch(lambda x: x in {1, 0}, "in {0, 1}")}
+    _required_settings_values_condition = {
+        "cl7_11": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl7_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl7_8": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl7_9": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        # the above adds 7th class
+        "cl8_9": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl8_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl8_11": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl9_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "cl10_11": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "one_school": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "one_town": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "com_in_one": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+        "max_com_part": Ch(lambda x: 0 <= x <= 1, "0 <= x <= 1"),
+        "debug_mode": Ch(lambda x: x in {1, 0}, "in {0, 1}")
+    }
 
     @classmethod
     def _eval_klass_conditions(cls):

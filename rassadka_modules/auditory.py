@@ -302,8 +302,8 @@ class Mapping:
         arrived = 0
         team_members = 0
         team_members_arrived = 0
-        klass_count = dict([("n8", 0), ("n9", 0), ("n10", 0), ("n11", 0),
-                            ("n8_a", 0), ("n9_a", 0), ("n10_a", 0), ("n11_a", 0)])
+        klass_count = dict([("n7", 0), ("n8", 0), ("n9", 0), ("n10", 0), ("n11", 0),
+                            ("n7_a", 0), ("n8_a", 0), ("n9_a", 0), ("n10_a", 0), ("n11_a", 0)])
         for seat in self.m[np.where(self.m)].tolist():
             klass_count["n" + str(seat.data["klass"])] += 1
             if seat.data["arrived"]:
@@ -336,12 +336,13 @@ class Mapping:
 
 class Auditory(SafeClass):
 
-    CHECK = ["available", "class_8", "class_9",             # Для виджета
+    CHECK = ["available", "class_7", "class_8", "class_9",             # Для виджета
              "class_10", "class_11", "individual", "command"]
     export_names = oDict([("old_capacity", "Вместительность"), ("capacity", "Вместительность с доп проходами"),
                           ("total", "Сидит"), ("arrived", "Сидит(+)"),
                           ("teams", "Команд"), ("teams_arrived", "Команд(+)"),
                           ("team_members", "Командников"), ("team_members_arrived", "Командников(+)"),
+                          ("n7", "7кл"), ("n7_a", "7кл"),
                           ("n8", "8кл"), ("n8_a", "8кл(+)"),
                           ("n9", "9кл"), ("n9_a", "9кл(+)"),
                           ("n10", "10кл"), ("n10_a", "10кл(+)"),
@@ -349,7 +350,7 @@ class Auditory(SafeClass):
 
     _required_general_options = {"settings", "seats", "klass", "school"}
 
-    _required_settings_options = {"name", "available", "class_8", "class_9",
+    _required_settings_options = {"name", "available", "class_7", "class_8", "class_9",
                                   "class_10", "class_11", "individual", "command",
                                   "over_place", "over_row"}
 
@@ -371,6 +372,7 @@ class Auditory(SafeClass):
 
     _required_settings_values_condition = {"name": Ch(None, None),
                                            "available": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
+                                           "class_7": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
                                            "class_8": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
                                            "class_9": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
                                            "class_10": Ch(lambda x: x in {1, 0}, "in {0, 1}"),
@@ -386,7 +388,7 @@ class Auditory(SafeClass):
 
     _required_seats_shape = None
 
-    _required_settings_shape = (11, 4)
+    _required_settings_shape = (12, 4)
 
     def _create_paths(self):
         self.old_capacity = self.map.capacity
@@ -432,7 +434,7 @@ class Auditory(SafeClass):
         self.settings = settings
         self.inner_name = str(self.settings["name"])
         restricted = set()
-        for cl in ["class_8", "class_9", "class_10", "class_11"]:
+        for cl in ["class_7", "class_8", "class_9", "class_10", "class_11"]:
             if not self.settings[cl]:
                 restricted.add(cl)
         self.restricted_klasses = restricted
@@ -688,6 +690,7 @@ class Auditory(SafeClass):
         info["av"] = "+" if self.settings["available"] else "-"
         info["com"] = "+" if self.settings["command"] else "-"
         info["ind"] = "+" if self.settings["individual"] else "-"
+        info["kl7"] = "+" if self.settings["class_7"] else "-"
         info["kl8"] = "+" if self.settings["class_8"] else "-"
         info["kl9"] = "+" if self.settings["class_9"] else "-"
         info["kl10"] = "+" if self.settings["class_10"] else "-"
@@ -696,15 +699,14 @@ class Auditory(SafeClass):
 
     @property
     def summary(self) -> str:
-        message = """
-Аудитрия [{av}] {name}
-Доступность: K[{com}], И[{ind}]
-Всего мест:         {capacity: <3}     | 8  класс[{kl8}]:{n8:<3}({n8_a})
-Посажено:           {total: <3}({arrived:<3})| 9  класс[{kl9}]:{n9:<3}({n9_a})
-Из них командных:   {team_members: <3}({team_members_arrived:<3})| 10 класс[{kl10}]:{n10:<3}({n10_a})
-Всего команд:       {teams: <3}({teams_arrived:<3})| 11 класс[{kl11}]:{n11:<3}({n11_a})
-""".format(**self.info)
-        return message
+        message = "Аудитрия [{av}] {name}\n"
+        message += "Доступность: K[{com}], И[{ind}]".ljust(40, " ") + "| 7 класс[{kl7}]:{n7:<3}({n7_a})\n"
+        message += "Всего мест:         {capacity: <3}".ljust(40, " ") + "| 8 класс[{kl8}]:{n8:<3}({n8_a})\n"
+        message += "Посажено:           {total: <3}({arrived:<3})".ljust(40, " ") + "| 9 класс[{kl9}]:{n9:<3}({n9_a})\n"
+        message += "Из них командных:   {team_members: <3}({team_members_arrived:<3})".ljust(40, " ") \
+                   + "| 10 класс[{kl10}]:{n10:<3}({n10_a})\n"
+        message += "Всего команд:       {teams: <3}({teams_arrived:<3})".ljust(40, " ") + "| 11 класс[{kl11}]:{n11:<3}({n11_a})\n"
+        return message.format(**self.info)
 
     @property
     def people_table(self) -> pd.DataFrame:
@@ -770,8 +772,8 @@ class Auditory(SafeClass):
         for x, wx in x_zip:
             writer.write(0, wx + 1, "мст " + str(x + 1))
         for (y, wy), (x, wx) in yx_zip:
-            person = self.map.get_data((y, x))
             if self.map.m[(y, x)]:
+                person = self.map.m[(y, x)].get_placed()
                 task = str(person[data])
             elif self.map.m[(y, x)].status:
                 task = "..."

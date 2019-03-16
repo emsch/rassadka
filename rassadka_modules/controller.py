@@ -28,7 +28,7 @@ class Controller(SafeClass):
     _razdatka_cols = ["fam", "name", "otch", "klass", "row", "col", "Пришел?", "Справка?"]
     max_iter = 20
 
-    CHECK = ["cl8_9", "cl8_10", "cl8_11", "cl9_10",  # Для виджета
+    CHECK = ["cl7_8", "cl7_9", "cl7_10", "cl7_11", "cl8_9", "cl8_10", "cl8_11", "cl9_10",  # Для виджета
              "cl9_11", "cl10_11", "one_school",
              "one_town", "com_in_one",
              "debug_mode"]
@@ -181,7 +181,7 @@ class Controller(SafeClass):
 
     @mutable
     def load_emails(self, file):
-        table = pd.read_excel(file, sheetname=0).applymap(clr)
+        table = pd.read_excel(file, sheet_name=0).applymap(clr)
         if not self._check_settings(fact=set(table.columns),
                                     req={"email"},
                                     way=">="):
@@ -199,7 +199,7 @@ class Controller(SafeClass):
            надо дополнительно указать все места
            Аудитория, Ряд, Место
         """
-        people = pd.read_excel(file, sheetname=0).applymap(clr)
+        people = pd.read_excel(file, sheet_name=0).applymap(clr)
         if not self._check_settings(fact=set(people.columns),
                                     req=set(self.required_data_cols.values()),
                                     way=">="):
